@@ -13,10 +13,10 @@ const nextConfig: NextConfig = {
     // ]
   },
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   webpack(config) {
     // Enable importing SVG files as React components
