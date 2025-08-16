@@ -5,13 +5,16 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCartStore } from '@/store/cart'
 
+import LiveDemoModal from './LiveDemoModal'
+
 // SVGR icons
 import CartIcon from '@/images/cart.svg'
 import ProfileIcon from '@/images/profile.svg'
+import DemoIcon from '@/images/demo.svg'
 
 type UserState = { loggedIn: boolean; email?: string; name?: string } | null
 
-export default function Navbar() {
+export default function Navbar() { 
   const [user, setUser] = useState<UserState>(null)
   const [mounted, setMounted] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -135,8 +138,10 @@ export default function Navbar() {
       </Link>
     )
   }
+const [showDemo, setShowDemo] = useState(false) //regarding live demo modal
 
   return (
+    <>
     <nav
       className={[
         'fixed top-0 left-0 right-0 z-50',
@@ -160,6 +165,14 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
+            {/* Live Demo Button */}
+            <button
+              onClick={() => setShowDemo(true)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-black/5 hover:ring-softgold/40 transition text-black hover:text-softgold"
+              title="Live Demo"
+            >
+              <DemoIcon className="h-5 w-5" />
+            </button>
             <Link
               href="/cart"
               aria-label="Cart"
@@ -167,6 +180,7 @@ export default function Navbar() {
               className="relative inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-black/5 hover:ring-softgold/40 transition text-black hover:text-softgold"
               title="Cart"
             >
+            
               <CartIcon className="h-5 w-5" />
               {totalItems > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 min-w-[18px] rounded-full bg-softgold px-1.5 text-[11px] leading-5 text-white text-center">
@@ -174,6 +188,8 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            
+
 
             <div className="relative" ref={menuRef}>
               <button
@@ -239,6 +255,9 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      
     </nav>
+    {showDemo && <LiveDemoModal onClose={() => setShowDemo(false)} />}
+    </>
   )
 }
