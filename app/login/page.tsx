@@ -1,12 +1,23 @@
+// FILE: app/login/page.tsx
 'use client'
-export const dynamic = 'force-dynamic';
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+
+export const dynamic = 'force-dynamic'
+
+export default function AuthPage() {
+  // why: Next.js requires a Suspense boundary around hooks like useSearchParams during prerender
+  return (
+    <Suspense fallback={<div className="p-6">Loading…</div>}>
+      <AuthInner />
+    </Suspense>
+  )
+}
 
 type Mode = 'login' | 'signup'
 
-export default function AuthPage() {
+function AuthInner() {
   const [mode, setMode] = useState<Mode>('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -66,9 +77,8 @@ export default function AuthPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-      {/* Animated blush gradient background */}
+      {/* background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#f3e2c3] via-[#e4cead] to-[#d8b487] animate-gradient-slow" />
-      {/* glow highlight */}
       <div className="absolute -top-28 left-1/2 w-[500px] h-[500px] -translate-x-1/2 rounded-full bg-white/40 blur-3xl opacity-50 pointer-events-none" />
 
       <div className="relative w-full max-w-md bg-white/30 backdrop-blur-2xl border border-white/40 rounded-3xl p-6 sm:p-8 drop-shadow-lg">
@@ -158,8 +168,8 @@ export default function AuthPage() {
             className="w-full bg-gray-900 text-white font-semibold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
           >
             {loading
-              ? (mode === 'login' ? 'Signing in…' : 'Creating account…')
-              : (mode === 'login' ? 'Sign In' : 'Create Account')}
+              ? mode === 'login' ? 'Signing in…' : 'Creating account…'
+              : mode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
@@ -174,4 +184,9 @@ export default function AuthPage() {
       </div>
     </div>
   )
+}
+
+// FILE: app/login/loading.tsx
+export default function Loading() {
+  return <div className="p-6">Preparing login…</div>
 }
